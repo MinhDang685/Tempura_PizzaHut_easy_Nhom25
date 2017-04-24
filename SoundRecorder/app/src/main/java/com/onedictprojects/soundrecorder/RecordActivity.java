@@ -88,33 +88,33 @@ public class RecordActivity extends AppCompatActivity {
                     Toast.makeText(getApplication(), "START", Toast.LENGTH_LONG).show();
                     processEnableRecording();
                     updateNotificationWhenUserTouchStart();
-                    startBackgroundColorTransition();
+                    //startBackgroundColorTransition();
                 }
                 else if(intent.getAction().equals("STOP")) {
                     Toast.makeText(getApplication(), "STOP", Toast.LENGTH_LONG).show();
                     processPauseRecording();
                     processStopRecording();
                     updateNotificationWhenUserTouchStop();
-                    endBackgroundColorTransition();
+                    //endBackgroundColorTransition();
                 }
                 else if(intent.getAction().equals("PAUSE")) {
                     Toast.makeText(getApplication(), "PAUSE", Toast.LENGTH_LONG).show();
                     processPauseRecording();
                     updateNotificationWhenUserTouchPause();
-                    pauseBackgroundColorTransition();
+                    //pauseBackgroundColorTransition();
                 }
                 else if(intent.getAction().equals("RESUME")) {
                     Toast.makeText(getApplication(), "RESUME", Toast.LENGTH_LONG).show();
                     processEnableRecording();
                     updateNotificationWhenUserTouchResume();
-                    startBackgroundColorTransition();
+                    //startBackgroundColorTransition();
                 }
                 else if(intent.getAction().equals("DELETE")) {
                     Toast.makeText(getApplication(), "DELETE", Toast.LENGTH_LONG).show();
                     processPauseRecording();
                     processDeleteRecording();
                     updateNotificationWhenUserTouchStop();
-                    endBackgroundColorTransition();
+                    //endBackgroundColorTransition();
                 }
             }
         };
@@ -127,7 +127,7 @@ public class RecordActivity extends AppCompatActivity {
         registerReceiver(receiver, filter);
         addNotification();
         int duration = 10000;
-        initializeBackgroundColorTransition(duration);
+        //initializeBackgroundColorTransition(duration);
     }
 
     final int NOTIFICATION_ID = 0;
@@ -428,23 +428,23 @@ public class RecordActivity extends AppCompatActivity {
                     if(isRecording==false) {
                         processEnableRecording();
                         updateNotificationWhenUserTouchStart();
-                        startBackgroundColorTransition();
+                        //startBackgroundColorTransition();
                     }
                     else {
                         processPauseRecording();
                         updateNotificationWhenUserTouchPause();
-                        pauseBackgroundColorTransition();
+                        //pauseBackgroundColorTransition();
                     }
                     break;
                 case R.id.btnStop:
                     processStopRecording();
                     updateNotificationWhenUserTouchStop();
-                    endBackgroundColorTransition();
+                    //endBackgroundColorTransition();
                     break;
                 case R.id.btnDelete:
                     processDeleteRecording();
                     updateNotificationWhenUserTouchStop();
-                    endBackgroundColorTransition();
+                    //endBackgroundColorTransition();
                     break;
             }
         }
@@ -624,11 +624,13 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void pauseBackgroundColorTransition() {
-        colorAnimation.pause();
+        if(colorAnimation.isRunning())
+            colorAnimation.pause();
     }
 
     private void resumeBackgroundColorTransition() {
-        colorAnimation.resume();
+        if(!colorAnimation.isRunning())
+            colorAnimation.resume();
     }
 
     private void startBackgroundColorTransition() {
@@ -638,8 +640,10 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void endBackgroundColorTransition() {
-        colorAnimation.end();
-        findViewById(R.id.activity_record).setBackgroundColor(getResources().getColor(R.color.colorDarkGreen));
+        if(colorAnimation.isStarted()) {
+            colorAnimation.end();
+            findViewById(R.id.activity_record).setBackgroundColor(getResources().getColor(R.color.colorDarkGreen));
+        }
     }
 
     void reverseTransitionBackgroundColor() {
